@@ -5,3 +5,35 @@ list-item {
 .easyToSee{
     border: 1px solid red;
 }
+
+.container {
+    display: flex;
+}
+
+.list-item-container {
+    flex-direction: column;
+    max-height: 15vw;
+    min-height: 10vw;
+    max-width: 80vw;
+    min-width: 60vw;
+    margin: 15px auto;
+    padding: 10px 0;
+}
+
+.list-name-container {
+    background-color: aliceblue;
+
+}
+.list-name {
+    background-color: aliceblue;
+
+}
+.list-content-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.list-content-area {
+    background-color: aliceblue;
+}

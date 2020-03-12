@@ -1,31 +1,31 @@
-let listObject = {
+/*let listObject = {
         listKey: [],
         name: [],
-        listText: [],
+        listContent: {
+            numberOfItems: [],
+            listText: [],
+            isComplete: false
+        },
         completed: false
-    }
-
-    const listTemplate = `<div class="list-item" style="border:1px solid red;">
-                    <span>Name: New Thing<span>
-                    <ul>
-                        <li>test</li>
-                    </ul>
-                  </div>`;
-     
+    } */
+   
+let listObject = {
+    listKey: [],
+    lists:[]
+}
 
 //creates a new list item and stores it in local storage as an object
 function createListObj() {
-    //get input from the text fields
-   let listName =  document.getElementById('list-create-name').value.trim();
-   let listContent = document.getElementById('list-create-input').value.trim();
-    //store input into listObject and create a key for list Master
-    listObject.name.push(listName);
-    listObject.listText.push(listContent);
-    //set key for new obj to master list 
-    listObject.listKey.push(listObject.name.length - 1);
-    //console.log(listObject);
+    let listName =  document.getElementById('list-create-name').value.trim(); //get input from the text fields
+    let listContent = document.getElementById('list-create-input').value.trim();
+    if(listObject.lists.name.indexOf(listName) === -1) {
+        listObject.lists.name.push(listName); 
+    }
+    listObject.lists.listItems.push(listContent);
+    listObject.listKey.push(listObject.lists.name.length - 1); //set key for new obj to master list 
     localStorage.setItem('ListObject', JSON.stringify(listObject));
-    generateList(listObject.listKey.length - 1);
+    generateList(listObject.lists.name.length - 1, retrieveListObject());
+    console.log(listObject);
 }
 
 //gets the stringified JSON object from localStorage and parses it. returns the parsed object
@@ -35,43 +35,55 @@ function retrieveListObject() {
 }
 
 //takes the list item at 'key' position and displays it in html
-function generateList(key) {
-    const newList = retrieveListObject();
-    const container = document.getElementById('test-id');
-    const currentKey = key;
-    const list = `<div class="list-item" style="border:1px solid red;">
-                    <span>Name: ${newList.name[currentKey]}<span>
-                    <ul>
-                        <li>${newList.listText[currentKey]}</li>
-                    </ul>
-                  </div>`;
-    
-    container.innerHTML += list;
-    //test Template string
+function generateList(key, obj) {
+    document.getElementsByTagName('main')[0].innerHTML += `<div class="container easyToSee list-item-container">
+    <div class="container easyToSee list-name-container">
+        <h4 class="easyToSee list-name">${obj.lists.name[key]}</h4>
+    </div>
+    <div class="container easyToSee list-content-container">
+        <div class="list-content-area easyToSee">
+            <ul class="list-ul">
+            </ul>
+        </div>
+        <button>Remove list</button>
+    </div>
+</div>`;
+generateListElements(obj);
 }
+
 //display lists from local storage when page is loaded
 function reloadLists() {
-    console.log('loaded');
     const currentList = retrieveListObject();
     if (currentList != null) {
-        currentList.listKey.forEach((key) => {
-            document.getElementById('test-id').innerHTML += `<div id="list-item" style="border: 1px solid red;">name ${currentList.name[key]} stuff ${currentList.listText[key]} </div>`;
+        currentList.lists.name.forEach((name) =>
+            {
+                let count = 0;
+                generateList(count, currentList)
+                count <= currentList.lists.name.length-1 ? count++ : console.log('?'); 
         });
-    }   
+        console.log('loaded');
+    }     
 }
 
-//generates the html for the list item
-function generateListHTML(key) {
-    
+function generateListElements(obj) {
+    if(obj.lists.listItems != null){
+        let nameIndex = obj.lists.name.length-1;
+        obj.lists.listItems.forEach(item => {
+            let count = 0;
+            document.getElementsByClassName('list-ul')[count].innerHTML += `<li class"list-text">${item}</li>`
+            count++;
+            if(count == nameIndex) {
+                console.log('it worked?');
+            }
+        }); 
+    }
 }
-
-
 
 //for testing. clears the object
 function clearListObject() {
-    listObject.name = [];
+    listObject.lists.name = [];
     listObject.listKey = [];
-    listObject.listText = [];
+    listObject.lists.listItems = [];
     completed = false;
     console.log(listObject);
 }
@@ -80,3 +92,4 @@ function clearListObject() {
 function clearLocalStorage() {
     localStorage.clear();
 }
+
